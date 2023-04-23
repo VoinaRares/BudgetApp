@@ -1,44 +1,93 @@
-import { Button, Stack } from "react-bootstrap"
-import Container from "react-bootstrap/Container"
-import AddBudgetModal from "./components/AddBudgetModal"
-import AddExpenseModal from "./components/AddExpenseModal"
-import ViewExpensesModal from "./components/ViewExpensesModal"
-import BudgetCard from "./components/BudgetCard"
-import TotalBudgetCard from "./components/TotalBudgetCard"
-import { useState } from "react"
-import { onSnapshot, collection } from "firebase/firestore"
-import db from './firebase'
-import { deleteDoc, getDocs, doc, where } from 'firebase/firestore';
-
+import { Button, Stack } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import AddBudgetModal from "./components/AddBudgetModal";
+import AddExpenseModal from "./components/AddExpenseModal";
+import ViewExpensesModal from "./components/ViewExpensesModal";
+import BudgetCard from "./components/BudgetCard";
+import TotalBudgetCard from "./components/TotalBudgetCard";
+import { useEffect, useState, useRef } from "react";
+import { db, auth } from "./firebase";
+import { getDocs, collection, query, where } from "firebase/firestore";
+import { signOut, getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 
 function App() {
-  const [showAddBudgetModal, setShowAddBudgetModal] = useState(false)
-  const [showAddExpenseModal, setShowAddExpenseModal] = useState(false)
-  const [viewExpensesModalBudgetId, setViewExpensesModalBudgetId] = useState()
-  const [addExpenseModalBudgetId, setAddExpenseModalBudgetId] = useState()
+  const navigation = useNavigate();
 
-  const [cardsLists, setCardsLists] = useState([])
+  const [showAddBudgetModal, setShowAddBudgetModal] = useState(false);
+  const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
+  const [viewExpensesModal, setViewExpensesModal] = useState();
+  const [expenseName, setExpenseName] = useState();
+
+  const userId = useRef("");
+
+  const [cardsLists, setCardsLists] = useState([]);
+
+  let childId = 0;
+
+  const cardsCollectionRef = collection(db, "cards");
+  let q = query(cardsCollectionRef, where("user", "==", ""));
+
+  const getCardsLists = async () => {
+    //Read
+    try {
+
+      const data = await getDocs(q);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      setCardsLists(filteredData);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   
 
-
-  function openAddExpenseModal(budgetId) {
-    setShowAddExpenseModal(true)
-    setAddExpenseModalBudgetId(budgetId)
+  function openAddExpenseModal() {
+    setShowAddExpenseModal(true);
   }
 
+  function openViewExpenseModal(budgetName) {
+    setExpenseName(budgetName);
+    setViewExpensesModal(true);
+  }
 
-  const getCards = async(qu) => {
-    try{
-        const data = await getDocs(qu);
-        setCardsLists(data.docs.map((doc) => ({...doc.data(), cardId: doc.cardId})));
-    }catch(err)
-    {
-        console.log(err);
-        alert("Query failed!");
+  const Logout = async () => {
+    try {
+      await signOut(auth);
+      navigation("/");
+    } catch (err) {
+      console.error(err);
     }
-};
+  };
+
+
+  useEffect(()=>{
+    getCardsLists();
+    console.log("b");
+  },[])
   
+  
+
+  const authen = getAuth();
+  onAuthStateChanged(authen, (user) => {
+  if (user) {
+    if(userId.current === "")
+    {
+      q = query(cardsCollectionRef, where("user", "==", user.uid));
+      console.log(userId);
+      getCardsLists();
+      userId.current = user.uid
+      
+    }
+  } else {
+    navigation("/")
+  }
+  });
 
   return (
     <>
@@ -51,6 +100,9 @@ function App() {
           <Button variant="outline-primary" onClick={openAddExpenseModal}>
             Add Expense
           </Button>
+          <Button variant="danger" onClick={Logout}>
+            Log out
+          </Button>
         </Stack>
         <div
           style={{
@@ -60,19 +112,19 @@ function App() {
             alignItems: "flex-start",
           }}
         >
-          <div> {cardsLists.map((users) => {
-              return <BudgetCard
-              key={users.cardId}
-              name={users.budget}
-              amount={users.currentAmount}
-              max={users.max}
-              onAddExpenseClick={() => openAddExpenseModal(1)}
-              onViewExpensesClick={() =>
-                setViewExpensesModalBudgetId(1)
-              }
-          />
-          })}
-              
+          <div>
+            {cardsLists.map((cards) => {
+              return (
+                <BudgetCard
+                  key={childId++}
+                  name={cards.name}
+                  amount={cards.currentAmount}
+                  max={cards.budget}
+                  onAddExpenseClick={() => openAddExpenseModal()}
+                  onViewExpensesClick={() => openViewExpenseModal(cards.name)}
+                />
+              );
+            })}
           </div>
           <TotalBudgetCard />
         </div>
@@ -83,15 +135,15 @@ function App() {
       />
       <AddExpenseModal
         show={showAddExpenseModal}
-        defaultBudgetId={addExpenseModalBudgetId}
         handleClose={() => setShowAddExpenseModal(false)}
       />
       <ViewExpensesModal
-        budgetId={viewExpensesModalBudgetId}
-        handleClose={() => setViewExpensesModalBudgetId()}
+        show={viewExpensesModal}
+        handleClose={() => setViewExpensesModal(false)}
+        budgetName={expenseName}
       />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
