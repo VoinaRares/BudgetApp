@@ -18,12 +18,16 @@ function Login() {
 }
 
   return (
-    <Container>
-      <h1 className="me-auto text-center mt-3"> Login </h1>
+    <>
+    <Container className="me-auto d-flex flex-column justify-content-center" style={{ height: '100vh' }}>
+      <h1 className="text-center">Welcome to the Budget App</h1>
+      <h1 className="text-center"> Login </h1>
       <div className="text-center">
         <Button className="primary m-3" onClick={signInWithGoogle}> Log in with Google</Button>
       </div>
     </Container>
+    
+    </>
   );
 }
 
