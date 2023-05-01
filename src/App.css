@@ -28,6 +28,18 @@
   color: #61dafb;
 }
 
+.spacer {
+  aspect-ratio: 900/600;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.layer2 {
+  background-image: url('./blob-scene-haikei.svg');
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

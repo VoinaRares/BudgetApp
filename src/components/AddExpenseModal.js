@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
+
 export default function AddExpenseModal({
   show,
   handleClose
@@ -53,7 +54,7 @@ export default function AddExpenseModal({
       var index;
       for(let i = 0; i < cardsLists.length;  i++)
       {
-        if(cardsLists[i].name === name)
+        if(cardsLists[i].name === name && cardsLists[i].user === userId.current)
         {
             updateId = cardsLists[i].id;
             index = i;

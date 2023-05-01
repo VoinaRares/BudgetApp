@@ -18,7 +18,7 @@ export default function BudgetCard({
   }
 
   return (
-    <Card className= "mb-3" >
+    <Card className= "border-secondary mb-3" >
       <Card.Body>
         <Card.Title className="d-flex justify-content-between align-items-baseline fw-normal mb-3">
           <div className="me-2" >{name}</div>

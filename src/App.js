@@ -10,6 +10,7 @@ import { db, auth } from "./firebase";
 import { getDocs, collection, query, where } from "firebase/firestore";
 import { signOut, getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import "./App.css"
 
 
 function App() {
@@ -90,8 +91,8 @@ function App() {
   });
 
   return (
-    <>
-      <Container className="my-4">
+    <div className="spacer layer2">
+      <Container >
         <Stack direction="horizontal" gap="2" className="mb-4">
           <h1 className="me-auto">Budgets</h1>
           <Button variant="primary" onClick={() => setShowAddBudgetModal(true)}>
@@ -142,7 +143,7 @@ function App() {
         handleClose={() => setViewExpensesModal(false)}
         budgetName={expenseName}
       />
-    </>
+    </div>
   );
 }
 
