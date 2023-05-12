@@ -16,10 +16,9 @@ function Login() {
         console.error(err);
     }
 
-}
+} //Google Sign in
 
   return (
-    <>
     <div className="spacer layer1">
     <Container className="me-auto d-flex flex-column justify-content-center" style={{ height: '100vh' }}>
       <h1 className="text-center text-white">Welcome to the Budget App</h1>
@@ -29,7 +28,6 @@ function Login() {
       </div>
     </Container>
     </div>
-    </>
   );
 }
 

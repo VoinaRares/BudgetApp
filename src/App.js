@@ -4,7 +4,6 @@ import AddBudgetModal from "./components/AddBudgetModal";
 import AddExpenseModal from "./components/AddExpenseModal";
 import ViewExpensesModal from "./components/ViewExpensesModal";
 import BudgetCard from "./components/BudgetCard";
-import TotalBudgetCard from "./components/TotalBudgetCard";
 import { useEffect, useState, useRef } from "react";
 import { db, auth } from "./firebase";
 import { getDocs, collection, query, where } from "firebase/firestore";
@@ -28,7 +27,7 @@ function App() {
   let childId = 0;
 
   const cardsCollectionRef = collection(db, "cards");
-  let q = query(cardsCollectionRef, where("user", "==", ""));
+  let q = query(cardsCollectionRef, where("user", "==", "")); //declaration of query variable
 
   const getCardsLists = async () => {
     //Read
@@ -69,8 +68,7 @@ function App() {
 
   useEffect(()=>{
     getCardsLists();
-    console.log("b");
-  },[])
+  },[]) //Reads information from the database
   
   
 
@@ -79,8 +77,7 @@ function App() {
   if (user) {
     if(userId.current === "")
     {
-      q = query(cardsCollectionRef, where("user", "==", user.uid));
-      console.log(userId);
+      q = query(cardsCollectionRef, where("user", "==", user.uid)); //changes query based on user id
       getCardsLists();
       userId.current = user.uid
       
@@ -127,7 +124,6 @@ function App() {
               );
             })}
           </div>
-          <TotalBudgetCard />
         </div>
       </Container>
       <AddBudgetModal

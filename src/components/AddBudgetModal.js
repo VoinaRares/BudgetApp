@@ -15,9 +15,9 @@ export default function AddBudgetModal({ show, handleClose }) {
   const userId = useRef();
   
 
-  const cardsCollectionRef = collection(db, "cards");
+  const cardsCollectionRef = collection(db, "cards"); //db for the cards
 
-  const navigation = useNavigate();
+  const navigation = useNavigate();// for redirection
 
   const onSubmitCard = async () => {
     try{
@@ -26,7 +26,7 @@ export default function AddBudgetModal({ show, handleClose }) {
         currentAmount: 0,
         name: newBudgetName,
         user: userId.current
-      })
+      })//add Document
       window.location.reload(true)
       handleClose();
     }catch(err){
@@ -41,7 +41,7 @@ export default function AddBudgetModal({ show, handleClose }) {
   } else {
     navigation("/")
   }
-  });
+  }); //redirect if not logged in
   
   
   return (

@@ -66,7 +66,7 @@ export default function ViewExpensesModal({ show, handleClose, budgetName }) {
     let newAmount = 0;
     for(let i = 0; i < cardsLists.length;  i++)
       {
-        if(cardsLists[i].name === name)
+        if(cardsLists[i].name === name && cardsLists[i].user === userId.current)
         {
             
             newAmount = cardsLists[i].currentAmount - amount;

@@ -10,12 +10,6 @@ export default function BudgetCard({
   onAddExpenseClick,
   onViewExpensesClick,
 }) {
-  const classNames = []
-  if (amount > max) {
-    classNames.push("bg-danger", "bg-opacity-10")
-  } else if (gray) {
-    classNames.push("bg-light")
-  }
 
   return (
     <Card className= "border-secondary mb-3" >
@@ -26,7 +20,7 @@ export default function BudgetCard({
             {currencyFormatter.format(amount)}
             {max && (
               <span className="text-muted fs-6 ms-1">
-                / {currencyFormatter.format(max)}
+                / {currencyFormatter.format(max) } 
               </span>
             )}
           </div>
@@ -64,4 +58,4 @@ function getProgressBarVariant(amount, max) {
   if (ratio < 0.5) return "primary"
   if (ratio < 0.75) return "warning"
   return "danger"
-}
+} //ProgressBar color

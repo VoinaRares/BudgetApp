@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
+
 export default function AddExpenseModal({
   show,
   handleClose
@@ -44,12 +45,7 @@ export default function AddExpenseModal({
   }, [])
 
   const addExpense = async (name, amount, E_description) => {
-     await addDoc(expensesCollectionRef, {
-        amount: amount,
-        description: E_description,
-        name: name,
-        user: userId.current
-      })
+    try {
       var updateId;
       var index;
       for(let i = 0; i < cardsLists.length;  i++)
@@ -60,11 +56,23 @@ export default function AddExpenseModal({
             index = i;
         }
       }
+      
       const budgetDoc = doc(db,"cards", updateId);
       amount += cardsLists[index].currentAmount;
       await updateDoc(budgetDoc, {currentAmount: amount});
+      await addDoc(expensesCollectionRef, {
+        amount: amount,
+        description: E_description,
+        name: name,
+        user: userId.current
+      })
       window.location.reload(true)
-      handleClose();
+      
+    } catch (err) {
+      console.error(err);
+      alert("Please enter the correct Data");
+    }
+    handleClose();
   }
 
 
