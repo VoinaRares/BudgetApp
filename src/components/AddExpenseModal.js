@@ -48,6 +48,7 @@ export default function AddExpenseModal({
     try {
       var updateId;
       var index;
+      var aux;
       for(let i = 0; i < cardsLists.length;  i++)
       {
         if(cardsLists[i].name === name && cardsLists[i].user === userId.current)
@@ -58,8 +59,8 @@ export default function AddExpenseModal({
       }
       
       const budgetDoc = doc(db,"cards", updateId);
-      amount += cardsLists[index].currentAmount;
-      await updateDoc(budgetDoc, {currentAmount: amount});
+      aux = amount + cardsLists[index].currentAmount;
+      await updateDoc(budgetDoc, {currentAmount: aux});
       await addDoc(expensesCollectionRef, {
         amount: amount,
         description: E_description,
